@@ -20,20 +20,21 @@ import re
 from scrapy.spiders import SitemapSpider
 import supermarket_scrapy.spiders.abstractShopSpider as abstractShopSpider
 
+
 class LidlShopSpider(abstractShopSpider.AbstractShopSpider, SitemapSpider):
-    name = 'LidlShop'
-    store = ['Lidl']
+    name = "LidlShop"
+    store = ["Lidl"]
 
-    sitemap_urls = ['https://www.lidl.de/robots.txt'] # will lead to sitemap
-    sitemap_follow =  [re.compile('product', flags=re.IGNORECASE)]
+    sitemap_urls = ["https://www.lidl.de/robots.txt"]  # will lead to sitemap
+    sitemap_follow = [re.compile("product", flags=re.IGNORECASE)]
 
-    selectScriptXPath = 'body/script[1]/text()'
-    scriptSelectRegEx = re.compile('dataLayer\.push.*products\":\[(.*)\]')
+    selectScriptXPath = "body/script[1]/text()"
+    scriptSelectRegEx = re.compile('dataLayer\.push.*products":\[(.*)\]')
 
-    zutatenRegEx = re.compile('<b>Zutaten:<br><\/b>(.+?)<\/div>')
-    decDelimiterRegEx = re.compile('(?<=\d),(?=\d)')
-    sizeAmountRegEx = re.compile('\d+.\d+')
-    sizeUnitRegEx = re.compile('\d+.\d+-(\w)')
+    zutatenRegEx = re.compile("<b>Zutaten:<br><\/b>(.+?)<\/div>")
+    decDelimiterRegEx = re.compile("(?<=\d),(?=\d)")
+    sizeAmountRegEx = re.compile("\d+.\d+")
+    sizeUnitRegEx = re.compile("\d+.\d+-(\w)")
 
     def __init__(self, *args, **kwargs):
         super(LidlShopSpider, self).__init__(*args, **kwargs)
@@ -47,14 +48,14 @@ class LidlShopSpider(abstractShopSpider.AbstractShopSpider, SitemapSpider):
         script = response.xpath(self.selectScriptXPath)
         jstring = script.re_first(self.scriptSelectRegEx)
         if not jstring:
-            self.logger.info('No desired script json at ' + response.url)
-            return None # There is nothing to parse
+            self.logger.info("No desired script json at " + response.url)
+            return None  # There is nothing to parse
         jdict = json.loads(jstring)
         return jdict
 
     def getName(self, response=None, data=None):
-        if 'name' in data:
-            return data['name']
+        if "name" in data:
+            return data["name"]
         else:
             return None
 
@@ -65,16 +66,16 @@ class LidlShopSpider(abstractShopSpider.AbstractShopSpider, SitemapSpider):
         return ingredients
 
     def getBrand(self, response=None, data=None):
-        if 'brand' in data:
-            return data['brand']
+        if "brand" in data:
+            return data["brand"]
         else:
             None
 
     def getCategory(self, response=None, data=None):
-        if 'category' in data:
-            category = data['category']
-            category = category.split('/') #split category/subcategory
-            category = category[0] # only top level category
+        if "category" in data:
+            category = data["category"]
+            category = category.split("/")  # split category/subcategory
+            category = category[0]  # only top level category
             category = category.lower()
             return category
         else:
@@ -83,30 +84,30 @@ class LidlShopSpider(abstractShopSpider.AbstractShopSpider, SitemapSpider):
     def getSize(self, response=None, data=None):
         returnDict = dict()
         amountstring = response.xpath(
-                '//div[@id="articledetail"]//small[@class="amount"]/text()'
-                                        )
+            '//div[@id="articledetail"]//small[@class="amount"]/text()'
+        )
         if amountstring:
             amount = amountstring.re_first(self.sizeAmountRegEx)
             if amount:
-                returnDict['amount'] = amount
+                returnDict["amount"] = amount
 
             unit = amountstring.re_first(self.sizeUnitRegEx)
             if unit:
-                returnDict['unit'] = unit
+                returnDict["unit"] = unit
         return returnDict
 
     def getPrice(self, response=None, data=None):
         returnDict = dict()
-        if 'price' in data:
-            returnDict['amount'] = data['price']
+        if "price" in data:
+            returnDict["amount"] = data["price"]
             # there is an all prices in Euro policy at Lidl
-            returnDict['currency'] = 'EUR'
+            returnDict["currency"] = "EUR"
 
     def getImageURL(self, response=None, data=None):
         imageURL = response.xpath(
-  './/img[contains(@src, "product") and not(contains(@src, "tinythumbnail"))]/@src'
-                                      )
+            './/img[contains(@src, "product") and not(contains(@src, "tinythumbnail"))]/@src'
+        )
         imageURL = imageURL.extract_first()
         if imageURL:
-            imageURL = 'https://www.lidl.de' + imageURL
+            imageURL = "https://www.lidl.de" + imageURL
         return imageURL
