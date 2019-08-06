@@ -1,19 +1,33 @@
-# Before you start
+# supermarket spiders
+
+A Scrapy project that scrapes Austrian supermarkets.
+
+## Installation
+
+    host# apt-get install --no-install-recommends vagrant ansible virtualbox
+
+## Setup
+
+    host$ vagrant up --provider=virtualbox
+    host$ vagrant ssh
+
+## Validate
+
+    guest$ cd hostdir
+    guest$ python checkschema.py --schema-file schema.json --data-file testdata.json --brands-file brands.list --labels-file labels.list --resources-file resources.list
+
+# Development Notes
 
 ## Abstract Shop Spider
 
-Besides the scrapy parents Spider and SitemapSpider, allof the new spiders have the 
-AbstractShopSpider as parent, where the main functionallity for the json schema is 
-provided. This class is not really abstract though.
+All the supermarket spiders implement the `AbstractShopSpider` interface, where
+the main functionallity for the json schema is provided (though this class is not
+really abstract).
 
-## Labels at ./supermarket_scrapy
+Retrieves labels from [supplychainge](https://supplychainge.org) and compiles
+regexes for searching websites.
 
-Retrieves labels from supplychainge and compiles regexes for searching websites
-
-## What Do you need:
-
-Often selenium & chrome. For amazon we need to read image text with tesseract and German
-language training data (https://github.com/tesseract-ocr/tesseract/wiki).
+## Available Spiders
 
 ### MeinDMatShopSpider
 * type = Sitemap
