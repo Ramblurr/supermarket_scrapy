@@ -22,7 +22,7 @@ class AbstractShopSpider:
     store = None
     name = None
     labels = labels.labels
-    listOutputDirectory = "/home/ramblurr/src/supermarket_scrapy"
+    listOutputDirectory = "/project/data"
 
     whiteSpaceRegEx = re.compile("[\s]+")
     htmlTagRegEx = re.compile("(<\/{0,1}\w.*?>)")
@@ -52,7 +52,7 @@ class AbstractShopSpider:
         if name:
             parsedDict["name"] = cleanString.cleanString(name)
         else:
-            self.logger.critical("No name " + response.url)
+            self.logger.critical("No name for " + response.url)
             return None
         ingredients = self.getIngredients(response=response, data=data)
         if ingredients:
@@ -61,7 +61,6 @@ class AbstractShopSpider:
             parsedDict["ingredients"] = ingredients
         else:
             parsedDict["ingredients"] = []
-            self.logger.critical("No ingridients at " + response.url)
         productLabels = self.getLabels(response=response, data=data)
         if productLabels:
             parsedDict["labels"] = productLabels

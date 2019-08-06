@@ -23,7 +23,7 @@ class MpreisShop(abstractShopSpider.AbstractShopSpider, Spider):
     sizeAmountRegEx = re.compile("\d+[,]*\d*")
     priceAmountRegEx = re.compile("(\d+?)\D")
 
-    maxPagePerCategory = 10 ** 3  # Security net
+    maxPagePerCategory = 200  # empirically derived in 2019
 
     def __init__(self, *args, **kwargs):
         super(MpreisShop, self).__init__(*args, **kwargs)
