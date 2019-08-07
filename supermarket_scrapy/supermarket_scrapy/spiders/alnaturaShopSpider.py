@@ -47,6 +47,11 @@ class AlnaturaShopSpider(abstractShopSpider.AbstractShopSpider, SitemapSpider):
         gtin = gtin.extract_first()
         return gtin
 
+    def getSKU(self, response=None, data=None):
+        sku = response.xpath('//*[@itemprop="sku"]/@content')
+        sku = sku.extract_first()
+        return sku
+
     def getBrand(self, response=None, data=None):
         brand = response.xpath('//*[@itemprop="brand"]/*[@itemprop="name"]/@content')
         brand = brand.extract_first()

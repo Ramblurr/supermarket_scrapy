@@ -74,6 +74,9 @@ class AbstractShopSpider:
         gtin = self.getGtin(response=response, data=data)
         if gtin:
             parsedDict["gtin"] = cleanString.cleanString(gtin)
+        sku = self.getSKU(response=response, data=data)
+        if sku:
+            parsedDict["sku"] = cleanString.cleanString(sku)
         brand = self.getBrand(response=response, data=data)
         if brand:
             brand = cleanString.cleanString(brand)
@@ -157,6 +160,9 @@ class AbstractShopSpider:
             return self.store
 
     def getGtin(self, response=None, data=None):
+        return None
+
+    def getSKU(self, response=None, data=None):
         return None
 
     def getBrand(self, response=None, data=None):

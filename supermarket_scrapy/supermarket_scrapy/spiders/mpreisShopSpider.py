@@ -112,3 +112,7 @@ class MpreisShop(abstractShopSpider.AbstractShopSpider, Spider):
         imgURL = response.xpath('//img[@itemprop="image"]/@src')
         imgURL = imgURL.extract_first()
         return imgURL
+
+    def getSKU(self, response=None, data=None):
+        aid = response.xpath('//input[@name="aid"]/@value')
+        return aid.extract_first()

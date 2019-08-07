@@ -1,6 +1,9 @@
 LOCAL_DATA=/home/seed/supermarket/data
 DEST=/project/data
 
+build:
+	docker build -t scrapy .
+
 shell:
 	docker run --rm -it -v $(LOCAL_DATA):$(DEST) scrapy /bin/bash
 
