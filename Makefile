@@ -2,13 +2,13 @@ LOCAL_DATA=/home/seed/supermarket/data
 DEST=/project/data
 
 build:
-	docker build -t scrapy .
+	sudo docker-compose build
 
 shell:
-	docker run --rm -it -v $(LOCAL_DATA):$(DEST) scrapy /bin/bash
+	docker run --rm -it -v $(LOCAL_DATA):$(DEST) scraper-base /bin/bash
 
 alnatura:
-	cd supermarket_scrapy && scrapy crawl AlnaturaShop -o $(DEST)/alnatura.json -t json --logfile=$(DEST)/alnatura.log
+	sudo docker-compose up alnatura-scraper
 
 mpreis:
-	cd supermarket_scrapy && scrapy crawl mpreisShop -o $(DEST)/mpreis.json -t json --logfile=$(DEST)/mpreis.log
+	sudo docker-compose up mpreis-scraper

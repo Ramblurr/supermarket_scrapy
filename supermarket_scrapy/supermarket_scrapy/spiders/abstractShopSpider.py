@@ -13,16 +13,16 @@ import os
 import re
 import time
 
+import scrapy
 
 import supermarket_scrapy.labels as labels
 import supermarket_scrapy.cleanString as cleanString
 
 
-class AbstractShopSpider:
+class AbstractShopSpider(scrapy.Spider):
     store = None
     name = None
     labels = labels.labels
-    listOutputDirectory = "/project/data"
 
     whiteSpaceRegEx = re.compile("[\s]+")
     htmlTagRegEx = re.compile("(<\/{0,1}\w.*?>)")
@@ -39,7 +39,7 @@ class AbstractShopSpider:
     units = cleanString.units
 
     def _setOUTPUT_(self):
-        self.ressourcesOUTPUT = set()
+        self.resourcesOUTPUT = set()
         self.labelsOUTPUT = set()
         self.brandsOUTPUT = set()
 
@@ -57,7 +57,7 @@ class AbstractShopSpider:
         ingredients = self.getIngredients(response=response, data=data)
         if ingredients:
             for ingredient in ingredients:
-                self.ressourcesOUTPUT.add(ingredient)
+                self.resourcesOUTPUT.add(ingredient)
             parsedDict["ingredients"] = ingredients
         else:
             parsedDict["ingredients"] = []
@@ -219,22 +219,26 @@ class AbstractShopSpider:
             return ingredients
 
     def closed(self, message):
-        directory = self.listOutputDirectory + os.sep
+        store_root = self.settings.get("SUPERMARKET_DATA_DIR")
         thisTime = time.strftime("%d-%m-%Y_%H-%M")
-        brandsFileName = directory + "_".join([self.name, "brands", thisTime]) + ".txt"
-        ressourcesFileName = (
-            directory + "_".join([self.name, "ressources", thisTime]) + ".txt"
+        brandsFileName = os.path.join(
+            store_root, "_".join([self.name, "brands", thisTime]) + ".txt"
         )
-        labelsFileName = directory + "_".join([self.name, "labels", thisTime]) + ".txt"
+        resourcesFileName = os.path.join(
+            store_root, "_".join([self.name, "resources", thisTime]) + ".txt"
+        )
+        labelsFileName = os.path.join(
+            directory, "_".join([self.name, "labels", thisTime]) + ".txt"
+        )
 
         with codecs.open(
             brandsFileName, mode="w", encoding="utf-8", errors="namereplace"
         ) as file:
             file.write("\n".join(self.brandsOUTPUT))
         with codecs.open(
-            ressourcesFileName, mode="w", encoding="utf-8", errors="namereplace"
+            resourcesFileName, mode="w", encoding="utf-8", errors="namereplace"
         ) as file:
-            file.write("\n".join(self.ressourcesOUTPUT))
+            file.write("\n".join(self.resourcesOUTPUT))
         with codecs.open(
             labelsFileName, mode="w", encoding="utf-8", errors="namereplace"
         ) as file:

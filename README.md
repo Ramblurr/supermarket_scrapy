@@ -1,20 +1,49 @@
 # supermarket spiders
 
-A Scrapy project that scrapes Austrian supermarkets.
+A Scrapy project that scrapes Austrian supermarkets for product inventory.
 
-## Installation
+## Get Going
 
-    host# apt-get install --no-install-recommends vagrant ansible virtualbox
+### Dependencies
+
+* Python >= 3.7
+* virtualenv
+* Docker (optional)
+* make (optional)
 
 ## Setup
 
-    host$ vagrant up --provider=virtualbox
-    host$ vagrant ssh
+```
+# 1. setup .env
+cp .env.sample .env
+vim .env
+# 2. setup your virtualenv and
+# 3. install deps
+pip install -r requirements.txt
+# 4. enter scrapy project dir
+cd supermarket_scrapy/
+# 5. crawl a shop
+scrapy crawl MpreisShop -o mpreis.json -t json
+```
 
-## Validate
+With Docker:
 
-    guest$ cd hostdir
-    guest$ python checkschema.py --schema-file schema.json --data-file testdata.json --brands-file brands.list --labels-file labels.list --resources-file resources.list
+```
+# 1. setup .env
+cp .env.sample .env
+vim .env
+# 2. build image
+make build
+# 3. run mpreis spider
+make mpreis
+```
+
+## Validate Schema
+
+```console
+$ cd schema
+$ python checkschema.py --schema-file schema.json --data-file testdata.json --brands-file brands.list --labels-file labels.list --resources-file resources.list
+```
 
 # Development Notes
 
@@ -130,6 +159,11 @@ not work (time out). Bug?
 
 * Needs: Downloader Middleware: 'supermarket_scrapy.middlewares.useChrome'
 * Needs: Selenium Chrome
+
+### MpreisShopSpider
+
+* type = Spider
+* name = 'MpreisShop'
 
 ### MyTimeShopSpider
 * type = Sitemap

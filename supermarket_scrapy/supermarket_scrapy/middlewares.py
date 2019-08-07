@@ -93,13 +93,17 @@ class UseChrome:
     def __init__(self, settings):
         self.settings = settings
         options = webdriver.ChromeOptions()
-        # options.binary_location = '/usr/bin/chromium'
-        options.add_argument("headless")
+        options.add_argument("--headless")
         options.add_argument("disable-gpu")
         options.add_argument("disable-dev-shm-usage")
-        options.add_argument("no-sandbox")
         options.add_argument("window-size=1200x600")
-        browser = webdriver.Chrome(chrome_options=options)
+        print(
+            "opening webdriver connection ", settings.get("WEBDRIVER_COMMAND_EXECUTOR")
+        )
+        browser = webdriver.Remote(
+            settings.get("WEBDRIVER_COMMAND_EXECUTOR"),
+            desired_capabilities=options.to_capabilities(),
+        )
         self.browsers[0] = browser
         # browser.implicitly_wait(1)
         self.BillaWait = EC.presence_of_element_located(
@@ -109,7 +113,7 @@ class UseChrome:
         self.waits = {"MerkurShop": self.MerkurWait, "BillaShop": self.BillaWait}
 
     def __del__(self):  ### Right place to do this? To Do // Check!
-        for browser in self.browsers.values():
+        for browser in self.browsers:
             browser.quit()
 
     @classmethod

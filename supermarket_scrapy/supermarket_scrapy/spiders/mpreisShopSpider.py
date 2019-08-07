@@ -12,7 +12,7 @@ import supermarket_scrapy.spiders.abstractShopSpider as abstractShopSpider
 
 
 class MpreisShop(abstractShopSpider.AbstractShopSpider, Spider):
-    name = "mpreisShop"
+    name = "MpreisShop"
     store = "mpreis"
     start_urls = [
         "https://shop.mpreis.at/Lebensmittel/",
