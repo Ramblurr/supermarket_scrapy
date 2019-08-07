@@ -6,5 +6,5 @@ spider=${1:-}
 cd supermarket_scrapy
 DEST=$SUPERMARKET_DATA_DIR
 
-$PYTHON -m scrapy crawl $spider -o $DEST/$spider.json -t json --logfile=$DEST/$spider.log
+$PYTHON -m scrapy crawl $spider -o $DEST/$spider.json -t jsonlines --logfile=$DEST/$spider.log
 
