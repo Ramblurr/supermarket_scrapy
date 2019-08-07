@@ -101,3 +101,8 @@ HTTPCACHE_IGNORE_HTTP_CODES = []
 HTTPCACHE_STORAGE = "scrapy.extensions.httpcache.FilesystemCacheStorage"
 
 WEBDRIVER_COMMAND_EXECUTOR = os.getenv("COMMAND_EXECUTOR")
+
+SUPERMARKET_DEBUG = os.getenv("SUPERMARKET_DEBUG", "false") == "true"
+
+if not SUPERMARKET_DEBUG:
+    LOG_LEVEL = "INFO"
