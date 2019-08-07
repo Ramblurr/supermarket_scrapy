@@ -13,7 +13,8 @@ services:
   mpreis-scraper: &scraper-template
     image: scraper-base:latest
     depends_on: [scraper-base]
-    command: ["./wait-for-selenium.sh", "http://selenium:4444/wd/hub", "--", "./run-spider.sh"]
+    #command: ["./wait-for-selenium.sh", "http://selenium:4444/wd/hub", "--", "./run-spider.sh"]
+    command: ["./run-spider.sh", "MpreisShop"]
     environment:
       PYTHONUNBUFFERED: 0
       SUPERMARKET_DATA_DIR: /project/data
@@ -26,5 +27,5 @@ services:
       - selenium
   alnatura-scraper:
     <<: *scraper-template
-    command: ["./wait-for-selenium.sh", "http://selenium:4444/wd/hub", "--", "make", "alnatura"]
+    command: ["./run-spider.sh", "AlnaturaShop"]
 

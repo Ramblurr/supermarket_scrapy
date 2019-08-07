@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
 
-cd supermarket_scrapy
-DEST=${SUPERMARKET_DATA_DIR}
+set -e
 
-$PYTHON -m scrapy crawl MpreisShop -o ${DEST}/mpreis.json -t json --logfile=${DEST}/mpreis.log
+spider=${1:-}
+cd supermarket_scrapy
+DEST=$SUPERMARKET_DATA_DIR
+
+$PYTHON -m scrapy crawl $spider -o $DEST/$spider.json -t json --logfile=$DEST/$spider.log
 
