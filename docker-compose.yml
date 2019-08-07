@@ -21,8 +21,6 @@ services:
       COMMAND_EXECUTOR: http://selenium:4444/wd/hub
     volumes:
       - ${SUPERMARKET_DATA_DIR}:/project/data
-    ports:
-      - 8000:8000
     links:
       - selenium
   alnatura-scraper:
